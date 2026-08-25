@@ -1,0 +1,26 @@
+{
+  "pet": {
+    "recyclability": 52,
+    "circularity_index": 0.41,
+    "recovery_rate": 45,
+    "carbon_footprint": 2.1,
+    "recycling_energy": 12.5,
+    "reuse_possible": false
+  },
+  "pp": {
+    "recyclability": 28,
+    "circularity_index": 0.22,
+    "recovery_rate": 20,
+    "carbon_footprint": 1.8,
+    "recycling_energy": 10.2,
+    "reuse_possible": false
+  },
+  "hdpe": {
+    "recyclability": 35,
+    "circularity_index": 0.30,
+    "recovery_rate": 32,
+    "carbon_footprint": 1.5,
+    "recycling_energy": 9.8,
+    "reuse_possible": true
+  }
+}

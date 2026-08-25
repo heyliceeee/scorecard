@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ scorecard.title }}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(180deg, #faf7ff, #f3efff);
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .container { max-width: 850px; }
+        .product-img {
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            display: block;
+            margin: 0 auto;
+        }
+        .score-box {
+            background: #ffffffcc;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .metric {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .metric strong {
+            color: #5a4e88;
+        }
+
+        /* Dynamic color classes */
+        .material-good {
+            background: #e6ffe6; /* verde pastel */
+        }
+        .material-medium {
+            background: #fff9d6; /* amarelo pastel */
+        }
+        .material-bad {
+            background: #ffe6f2; /* rosa pastel */
+        }
+
+        .material-box {
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container py-5">
+
+    <a href="/" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+
+    <h1 class="fw-bold mt-4">{{ scorecard.title }}</h1>
+    <p class="description">Brand: {{ scorecard.brand }}</p>
+
+    <img src="{{ scorecard.image }}" class="img-fluid my-4 product-img" alt="{{ scorecard.title }}">
+
+    <div class="score-box mt-4">
+        <h4 class="fw-bold mb-3">Sustainability & Circularity Scorecard</h4>
+
+        <!-- EcoScore -->
+        <p class="metric">
+            <strong>EcoScore:</strong>
+            {% if scorecard.ecoscore == "NOT-APPLICABLE" %}
+                Not applicable for this product category
+            {% else %}
+                {{ scorecard.ecoscore }}
+            {% endif %}
+        </p>
+
+        <!-- Packaging Score -->
+        <p class="metric">
+            <strong>Packaging Environmental Score:</strong>
+            {{ scorecard.packaging_score }}
+        </p>
+
+        <!-- Circularity per material -->
+        <h5 class="fw-bold mt-4 mb-2">Packaging Materials</h5>
+
+        {% for m in scorecard.materials %}
+
+        {% set color_class =
+            'material-good' if m.score >= 50 else
+            'material-medium' if m.score >= 25 else
+            'material-bad'
+        %}
+
+        <div class="material-box {{ color_class }}">
+            <p class="metric"><strong>Material:</strong> {{ m.material }}</p>
+            <p class="metric"><strong>Shape:</strong> {{ m.shape }}</p>
+            <p class="metric"><strong>Environmental Score:</strong> {{ m.score }}</p>
+            {% if m.circularity %}
+        <hr>
+
+        <p class="metric"><strong>Recyclability:</strong> {{ m.circularity.recyclability }}%</p>
+        <p class="metric"><strong>Circularity Index:</strong> {{ m.circularity.circularity_index }}</p>
+        <p class="metric"><strong>Recovery Rate:</strong> {{ m.circularity.recovery_rate }}%</p>
+        <p class="metric"><strong>Carbon Footprint:</strong> {{ m.circularity.carbon_footprint }} kg CO₂/kg</p>
+        <p class="metric"><strong>Energy for Recycling:</strong> {{ m.circularity.recycling_energy }} MJ/kg</p>
+        <p class="metric"><strong>Reuse Possible:</strong>
+            {% if m.circularity.reuse_possible %}
+                Yes ♻️
+            {% else %}
+                No
+            {% endif %}
+        </p>
+    {% else %}
+        <p class="metric text-muted">No circularity data available.</p>
+    {% endif %}
+        </div>
+
+        {% endfor %}
+
+        <!-- Quantity -->
+        <p class="metric mt-4">
+            <strong>Quantity:</strong> {{ scorecard.quantity }}
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
